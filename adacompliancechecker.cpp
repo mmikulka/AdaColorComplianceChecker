@@ -1,5 +1,6 @@
 #include "adacompliancechecker.h"
 #include <cmath>
+#include <iostream>
 
 ADAComplianceChecker::ADAComplianceChecker() {}
 
@@ -11,7 +12,7 @@ ADAComplianceChecker::ADAComplianceChecker() {}
 double ADAComplianceChecker::normalize(const int value)
 {
     double returnValue = value/255.0;  // Normalize to range [0, 1]
-    return returnValue <= 0.03928 ? (value / 12.92) : std::pow((value + 0.055) / 1.055, 2.4);
+    return (returnValue <= 0.03928) ? (returnValue / 12.92) : std::pow((returnValue + 0.055) / 1.055, 2.4);
 }
 
 /**
@@ -24,7 +25,7 @@ double ADAComplianceChecker::calculateRelativeLuminance(const QColor& color)
     double normalizedR = normalize(color.red());
     double normalizedG = normalize(color.green());
     double normalizedB = normalize(color.blue());
-    return 0.2126 * normalizedR + 0.7152 * normalizedG + 0.0722 * normalizedB;
+    return (0.2126 * normalizedR) + (0.7152 * normalizedG) + (0.0722 * normalizedB);
 }
 
 /**
@@ -37,6 +38,7 @@ double ADAComplianceChecker::CalculateConstrastRatio(const QColor &foreground,
                             const QColor &Background)
 {
     double luminance1 = calculateRelativeLuminance(foreground);
+    std::cout << "Foreground" << luminance1;
     double luminance2 = calculateRelativeLuminance(Background);
     if (luminance1 < luminance2) std::swap(luminance1, luminance2);
     return (luminance1 + 0.05) / (luminance2 + 0.05);

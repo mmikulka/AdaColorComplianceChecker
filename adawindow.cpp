@@ -1,6 +1,7 @@
 #include "adawindow.h"
 #include "ui_adawindow.h"
 #include "adacompliancechecker.h"
+#include "colorswatchdelegate.h"
 #include <QModelIndex>
 #include <QAbstractItemModel>
 #include <QList>
@@ -52,7 +53,7 @@ AdaWindow::AdaWindow(
 
                 auto adaNumber = ADAComplianceChecker::CalculateConstrastRatio(ColorList[i], ColorList[j]);
 
-                QStandardItem *AdaNumberitem = new QStandardItem(QString::number(adaNumber));
+                QStandardItem *AdaNumberitem = new QStandardItem(QString::number(adaNumber, 'f', 2));
 
                 // Optional: blend the two colors (or just use one as background)
                 QColor c1 = ColorList[i];
@@ -68,6 +69,8 @@ AdaWindow::AdaWindow(
     }
 
     this->ui->tableView->setModel(colortableModel);
+
+    this->ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 AdaWindow::~AdaWindow()
